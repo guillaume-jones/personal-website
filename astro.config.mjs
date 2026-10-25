@@ -11,6 +11,7 @@ export default defineConfig({
       provider: fontProviders.google(),
       name: 'B612 Mono',
       cssVariable: '--font-b612-mono',
+      weights: [400, 700],
       fallbacks: ['monospace'],
     },
   ],
