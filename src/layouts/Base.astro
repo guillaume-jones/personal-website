@@ -20,6 +20,7 @@ const { title = "jones' site" } = Astro.props;
                 --bg: var(--navy);
                 --fg: var(--cream);
                 --bg-light: var(--navy-light);
+                --pixel: 0.25rem;
                 margin: 0;
                 padding: 0 0 calc(5.5rem + 1px);
                 background: var(--bg);
@@ -53,7 +54,7 @@ const { title = "jones' site" } = Astro.props;
             }
 
             h1 {
-                font-size: 2.5rem;
+                font-size: calc(var(--pixel) * 10);
             }
 
             h2 {

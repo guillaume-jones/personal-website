@@ -1,8 +1,43 @@
 ---
+import hexfleet from "../assets/projects/hexfleet.png";
 import DotMatrix from "../components/DotMatrix.astro";
+import ProjectCard from "../components/ProjectCard.astro";
 import Base from "../layouts/Base.astro";
+
+const projects = [
+    {
+        href: "/hexfleet",
+        image: hexfleet,
+        title: "hexfleet",
+        description:
+            "Hexagon-tile based game with simultaneous turns and unique rules. Singleplayer and online multiplayer with a leaderboard.",
+    },
+];
 ---
 
 <Base title="projects | jones' site">
-    <DotMatrix as="h1">projects</DotMatrix>
+    <DotMatrix as="h1">personal projects</DotMatrix>
+    <ul>
+        {projects.map((project) => (
+            <li>
+                <ProjectCard {...project} />
+            </li>
+        ))}
+    </ul>
 </Base>
+
+<style>
+    ul {
+        display: grid;
+        gap: 1rem;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+    }
+
+    @media (min-width: 40rem) {
+        ul {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
