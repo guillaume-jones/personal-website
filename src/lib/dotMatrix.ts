@@ -63,4 +63,4 @@ export const dotGrid = (grid: string[]) => {
     };
 };
 
-export const cursor = dotPath([[0, -1], [-1, 0], [0, 0], [1, 0], [0, 1]]);
+export const cursor: Cell[] = [[0, -1], [-1, 0], [0, 0], [1, 0], [0, 1]];

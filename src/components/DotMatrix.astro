@@ -18,9 +18,11 @@ const pattern = `dot-matrix-${crypto.randomUUID()}`;
         <pattern id={pattern} width="1" height="1" patternUnits="userSpaceOnUse">
             <rect class="off" width=".8" height=".8" />
         </pattern>
-        <path d={frame} fill={`url(#${pattern})`} />
-        <path class="on" d={lit} />
-        <path class="on cursor" d={cursor} />
+        <path class="frame" d={frame} fill={`url(#${pattern})`} />
+        <path class="on lit" d={lit} />
+        <g class="cursor">
+            {cursor.map(([x, y]) => <rect class="on" x={x} y={y} width=".8" height=".8" />)}
+        </g>
     </svg>
 </Tag>
 
@@ -57,14 +59,68 @@ const pattern = `dot-matrix-${crypto.randomUUID()}`;
 </style>
 
 <script>
+    type Cell = [number, number];
+
     for (const svg of document.querySelectorAll<SVGSVGElement>(".dot-matrix")) {
-        const cursor = svg.querySelector<SVGPathElement>(".cursor")!;
+        const frame = svg.querySelector<SVGPathElement>(".frame")!;
+        const cursor = svg.querySelector<SVGGElement>(".cursor")!;
+        const dots = [...cursor.querySelectorAll("rect")];
+        const lit = new Set(svg.querySelector(".lit")!.getAttribute("d")!.match(/\d+ \d+/g));
+        const touched = new Set<string>();
         const cols = svg.viewBox.baseVal.width;
-        svg.addEventListener("pointermove", (e) => {
+        const isOn = (key: string) => lit.has(key) !== touched.has(key);
+        let at: Cell = [NaN, NaN];
+
+        const cellAt = (e: PointerEvent): Cell => {
             const rect = svg.getBoundingClientRect();
             const cell = rect.width / cols;
-            const translate = `${Math.floor((e.clientX - rect.left) / cell)}px ${Math.floor((e.clientY - rect.top) / cell)}px`;
-            if (cursor.style.translate !== translate) cursor.style.translate = translate;
+            return [Math.floor((e.clientX - rect.left) / cell), Math.floor((e.clientY - rect.top) / cell)];
+        };
+
+        const touch = ([cx, cy]: Cell) => {
+            for (const dot of dots) {
+                const [x, y] = [cx + dot.x.baseVal.value, cy + dot.y.baseVal.value];
+                const key = `${x} ${y}`;
+                if (touched.has(key) || !frame.isPointInFill(new DOMPoint(x + 0.4, y + 0.4))) continue;
+                touched.add(key);
+                const cell = dot.cloneNode() as SVGRectElement;
+                cell.setAttribute("x", `${x}`);
+                cell.setAttribute("y", `${y}`);
+                cell.setAttribute("class", isOn(key) ? "on" : "off");
+                cursor.before(cell);
+            }
+        };
+
+        const render = () => {
+            cursor.style.translate = `${at[0]}px ${at[1]}px`;
+            for (const dot of dots) {
+                const key = `${at[0] + dot.x.baseVal.value} ${at[1] + dot.y.baseVal.value}`;
+                dot.setAttribute("class", isOn(key) ? "off" : "on");
+            }
+        };
+
+        if (!svg.closest("a, button")) {
+            svg.style.touchAction = "none";
+            svg.addEventListener("pointerdown", (e) => {
+                svg.setPointerCapture(e.pointerId);
+                at = cellAt(e);
+                touch(at);
+                render();
+            });
+        }
+
+        svg.addEventListener("pointermove", (e) => {
+            const [x, y] = cellAt(e);
+            const [lx, ly] = at;
+            if (x === lx && y === ly) return;
+            if (svg.hasPointerCapture(e.pointerId)) {
+                const steps = Math.max(Math.abs(x - lx), Math.abs(y - ly));
+                for (let i = 1; i <= steps; i++) {
+                    touch([Math.round(lx + ((x - lx) * i) / steps), Math.round(ly + ((y - ly) * i) / steps)]);
+                }
+            }
+            at = [x, y];
+            render();
         });
     }
 </script>
