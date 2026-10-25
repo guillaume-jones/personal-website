@@ -43,7 +43,7 @@ export const dotMatrix = (text: string) => {
     const left = Math.min(...xs) - PAD_X;
     const top = Math.max(...ys) + PAD_Y;
     const cols = Math.max(...xs) + PAD_X + 1 - left;
-    const rows = top - Math.min(...ys) + PAD_Y + 1;
+    const rows = top - Math.min(...ys) + 1;
     return {
         cols,
         rows,
