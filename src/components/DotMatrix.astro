@@ -1,0 +1,70 @@
+---
+import { cursor, dotMatrix } from "../lib/dotMatrix";
+
+const { as: Tag = "h1", ...rest } = Astro.props;
+const html = await Astro.slots.render("default");
+const entities: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'" };
+const text = html
+    .replace(/<[^>]*>/g, "")
+    .replace(/&(amp|lt|gt|quot|#39);/g, (_, entity) => entities[entity])
+    .trim();
+const { cols, rows, lit, frame } = dotMatrix(text);
+const pattern = `dot-matrix-${crypto.randomUUID()}`;
+---
+
+<Tag {...rest}>
+    <span set:html={html} />
+    <svg class="dot-matrix" viewBox={`0 0 ${cols} ${rows}`} style={`height: ${rows / 10}em`} aria-hidden="true">
+        <pattern id={pattern} width="1" height="1" patternUnits="userSpaceOnUse">
+            <rect class="off" width=".8" height=".8" />
+        </pattern>
+        <path d={frame} fill={`url(#${pattern})`} />
+        <path class="on" d={lit} />
+        <path class="on cursor" d={cursor} />
+    </svg>
+</Tag>
+
+<style>
+    span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+    }
+
+    svg {
+        display: block;
+        cursor: none;
+    }
+
+    .off {
+        fill: var(--bg-light);
+    }
+
+    .on {
+        fill: var(--fg);
+    }
+
+    .cursor {
+        visibility: hidden;
+    }
+
+    svg:hover .cursor {
+        visibility: visible;
+    }
+</style>
+
+<script>
+    for (const svg of document.querySelectorAll<SVGSVGElement>(".dot-matrix")) {
+        const cursor = svg.querySelector<SVGPathElement>(".cursor")!;
+        const cols = svg.viewBox.baseVal.width;
+        svg.addEventListener("pointermove", (e) => {
+            const rect = svg.getBoundingClientRect();
+            const cell = rect.width / cols;
+            const translate = `${Math.floor((e.clientX - rect.left) / cell)}px ${Math.floor((e.clientY - rect.top) / cell)}px`;
+            if (cursor.style.translate !== translate) cursor.style.translate = translate;
+        });
+    }
+</script>

@@ -1,5 +1,6 @@
 ---
 import { Font } from "astro:assets";
+import DotMatrix from "../components/DotMatrix.astro";
 ---
 
 <html lang="en">
@@ -8,27 +9,31 @@ import { Font } from "astro:assets";
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
         <title>jones' site</title>
-        <Font cssVariable="--font-doto" preload />
         <Font cssVariable="--font-b612-mono" preload />
         <style>
             body {
+                --bg: #0a1630;
+                --fg: #fff8f0;
+                --bg-light: #18284c;
                 margin: 0;
-                padding: 1.5rem;
-                background: #0a1630;
-                color: #fff8f0;
+                background: var(--bg);
+                color: var(--fg);
                 font-family: var(--font-b612-mono);
             }
 
             h1 {
-                margin: 0;
-                font-family: var(--font-doto);
+                margin: 1.5rem 0 0.5rem;
                 font-size: 2.5rem;
-                font-weight: 700;
+            }
+
+            h2 {
+                margin: 1rem 0 0.5rem;
+                font-size: 2rem;
             }
         </style>
     </head>
     <body>
-        <h1>guillaume-jones</h1>
+        <DotMatrix as="h1">guillaume jones</DotMatrix>
         <p>Dev working on various web & app projects since 2022.</p>
     </body>
 </html>

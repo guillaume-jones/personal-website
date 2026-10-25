@@ -9,13 +9,6 @@ export default defineConfig({
   fonts: [
     {
       provider: fontProviders.google(),
-      name: 'Doto',
-      cssVariable: '--font-doto',
-      weights: [700],
-      fallbacks: ['monospace'],
-    },
-    {
-      provider: fontProviders.google(),
       name: 'B612 Mono',
       cssVariable: '--font-b612-mono',
       fallbacks: ['monospace'],

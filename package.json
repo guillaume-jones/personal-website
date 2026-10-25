@@ -24,8 +24,10 @@
     "workerd": true
   },
   "devDependencies": {
+    "@types/fontkit": "^2.0.9",
     "@types/react": "^19.3.0",
     "@types/react-dom": "^19.3.0",
+    "fontkit": "^2.0.4",
     "wrangler": "^4.142.0"
   }
 }
