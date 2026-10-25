@@ -8,6 +8,9 @@ const PAD_Y = 1;
 
 type Cell = [number, number];
 
+const frameOf = (cols: number, rows: number) =>
+    `M1 0H${cols - 1}V1H${cols}V${rows - 1}H${cols - 1}V${rows}H1V${rows - 1}H0V1H1Z`;
+
 const dotPath = (cells: Cell[]) => cells.map(([x, y]) => `M${x} ${y}h.8v.8h-.8z`).join("");
 
 const dotsOf = (text: string) => {
@@ -45,7 +48,18 @@ export const dotMatrix = (text: string) => {
         cols,
         rows,
         lit: dotPath(dots.map(([x, y]) => [x - left, top - y])),
-        frame: `M1 0H${cols - 1}V1H${cols}V${rows - 1}H${cols - 1}V${rows}H1V${rows - 1}H0V1H1Z`,
+        frame: frameOf(cols, rows),
+    };
+};
+
+export const dotGrid = (grid: string[]) => {
+    const cols = grid[0].length + 2;
+    const rows = grid.length + 2;
+    return {
+        cols,
+        rows,
+        lit: dotPath(grid.flatMap((row, y) => [...row].flatMap((c, x) => (c === "#" ? [[x + 1, y + 1] as Cell] : [])))),
+        frame: frameOf(cols, rows),
     };
 };
 

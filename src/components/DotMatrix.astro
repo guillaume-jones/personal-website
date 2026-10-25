@@ -1,14 +1,14 @@
 ---
-import { cursor, dotMatrix } from "../lib/dotMatrix";
+import { cursor, dotGrid, dotMatrix } from "../lib/dotMatrix";
 
-const { as: Tag = "h1", ...rest } = Astro.props;
-const html = await Astro.slots.render("default");
+const { as: Tag = "h1", grid, ...rest } = Astro.props;
+const html = (await Astro.slots.render("default")) ?? "";
 const entities: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'" };
 const text = html
     .replace(/<[^>]*>/g, "")
     .replace(/&(amp|lt|gt|quot|#39);/g, (_, entity) => entities[entity])
     .trim();
-const { cols, rows, lit, frame } = dotMatrix(text);
+const { cols, rows, lit, frame } = grid ? dotGrid(grid) : dotMatrix(text);
 const pattern = `dot-matrix-${crypto.randomUUID()}`;
 ---
 

@@ -1,39 +1,9 @@
 ---
-import { Font } from "astro:assets";
 import DotMatrix from "../components/DotMatrix.astro";
+import Base from "../layouts/Base.astro";
 ---
 
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <title>jones' site</title>
-        <Font cssVariable="--font-b612-mono" preload />
-        <style>
-            body {
-                --bg: #0a1630;
-                --fg: #fff8f0;
-                --bg-light: #18284c;
-                margin: 0;
-                background: var(--bg);
-                color: var(--fg);
-                font-family: var(--font-b612-mono);
-            }
-
-            h1 {
-                margin: 1.5rem 0 0.5rem;
-                font-size: 2.5rem;
-            }
-
-            h2 {
-                margin: 1rem 0 0.5rem;
-                font-size: 2rem;
-            }
-        </style>
-    </head>
-    <body>
-        <DotMatrix as="h1">guillaume jones</DotMatrix>
-        <p>Dev working on various web & app projects since 2022.</p>
-    </body>
-</html>
+<Base>
+    <DotMatrix as="h1">guillaume jones</DotMatrix>
+    <p>Dev working on various web & app projects since 2022.</p>
+</Base>

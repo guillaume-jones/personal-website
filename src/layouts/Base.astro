@@ -1,0 +1,51 @@
+---
+import { Font } from "astro:assets";
+import Sidebar from "../components/Sidebar.astro";
+
+const { title = "jones' site" } = Astro.props;
+---
+
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+        <title>{title}</title>
+        <Font cssVariable="--font-b612-mono" preload />
+        <style is:global>
+            body {
+                --navy: #0a1630;
+                --navy-light: #18284c;
+                --cream: #fff8f0;
+                --bg: var(--navy);
+                --fg: var(--cream);
+                --bg-light: var(--navy-light);
+                margin: 0;
+                padding: 0 1rem 6rem;
+                background: var(--bg);
+                color: var(--fg);
+                font-family: var(--font-b612-mono);
+            }
+
+            @media (min-width: 40rem) {
+                body {
+                    padding: 0 0 0 6rem;
+                }
+            }
+
+            h1 {
+                margin: 1.5rem 0 0.5rem;
+                font-size: 2.5rem;
+            }
+
+            h2 {
+                margin: 1rem 0 0.5rem;
+                font-size: 2rem;
+            }
+        </style>
+    </head>
+    <body>
+        <Sidebar />
+        <slot />
+    </body>
+</html>
