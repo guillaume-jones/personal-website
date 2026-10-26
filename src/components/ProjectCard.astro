@@ -4,137 +4,134 @@ import { Image } from "astro:assets";
 import DotMatrix from "./DotMatrix.astro";
 
 interface Props {
-    href: string;
-    image: ImageMetadata;
-    title: string;
-    description: string;
+  href: string;
+  image: ImageMetadata;
+  title: string;
+  description: string;
 }
 
 const { href, image, title, description } = Astro.props;
 ---
 
 <a href={href}>
-    <div class="frame" aria-hidden="true">
-        <svg>
-            <rect class="track" width="100%" height="100%" />
-            <rect class="on" width="100%" height="100%" />
-        </svg>
-    </div>
-    <div class="screen">
-        <Image
-            src={image}
-            alt=""
-            widths={[480, 960]}
-            sizes="(min-width: 40rem) 50vw, 100vw"
-        />
-    </div>
-    <DotMatrix as="h2">{title}</DotMatrix>
-    <p>{description}</p>
+  <div class="frame" aria-hidden="true">
+    <svg>
+      <rect class="track" width="100%" height="100%" />
+      <rect class="on" width="100%" height="100%" />
+    </svg>
+  </div>
+  <div class="screen">
+    <Image src={image} alt="" widths={[480, 960]} sizes="(min-width: 40rem) 50vw, 100vw" />
+  </div>
+  <DotMatrix as="h2">{title}</DotMatrix>
+  <p>{description}</p>
 </a>
 
 <style>
-    a {
-        position: relative;
-        container-type: inline-size;
-        display: flex;
-        flex-direction: column;
-        padding: 1rem;
-        color: var(--fg);
-        text-decoration: none;
-        --dot:
-            transparent calc(var(--pixel) * 0.1),
-            #000 0 calc(var(--pixel) * 0.9), transparent 0;
-    }
+  a {
+    position: relative;
+    container-type: inline-size;
+    display: flex;
+    flex-direction: column;
+    padding: 1rem;
+    color: var(--fg);
+    text-decoration: none;
+    --dot: transparent calc(var(--pixel) * 0.1), #000 0 calc(var(--pixel) * 0.9), transparent 0;
+  }
 
-    .frame {
-        position: absolute;
-        inset: 0;
-        pointer-events: none;
-        mask:
-            linear-gradient(to right, var(--dot)) 0 0 / var(--pixel)
-                var(--pixel) round,
-            linear-gradient(to bottom, var(--dot)) 0 0 / var(--pixel)
-                var(--pixel) round;
-        mask-composite: intersect;
-    }
+  .frame {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    mask:
+      linear-gradient(to right, var(--dot)) 0 0 / var(--pixel) var(--pixel) round,
+      linear-gradient(to bottom, var(--dot)) 0 0 / var(--pixel) var(--pixel) round;
+    mask-composite: intersect;
+  }
 
-    svg {
-        position: absolute;
-        inset: calc(var(--pixel) / 2);
-        width: calc(100% - var(--pixel));
-        height: calc(100% - var(--pixel));
-        overflow: visible;
-    }
+  svg {
+    position: absolute;
+    inset: calc(var(--pixel) / 2);
+    width: calc(100% - var(--pixel));
+    height: calc(100% - var(--pixel));
+    overflow: visible;
+  }
 
-    rect {
-        fill: none;
-        stroke-width: var(--pixel);
-    }
+  rect {
+    fill: none;
+    stroke-width: var(--pixel);
+  }
 
-    .track {
-        stroke: var(--bg-light);
-    }
+  .track {
+    stroke: var(--bg-light);
+  }
 
-    .on {
-        stroke: var(--fg);
-        stroke-dasharray: 0 1;
-    }
+  .on {
+    stroke: var(--fg);
+    stroke-dasharray: 0 1;
+  }
 
-    .screen {
-        width: round(down, 100cqi, var(--pixel));
-        height: round(down, 52.5cqi, var(--pixel));
-        mask:
-            linear-gradient(to right, var(--dot)) 0 0 / var(--pixel) var(--pixel),
-            linear-gradient(to bottom, var(--dot)) 0 0 / var(--pixel) var(--pixel),
-            linear-gradient(#000 0 0) center / calc(100% - 2 * var(--pixel)) 100% no-repeat,
-            linear-gradient(#000 0 0) center / 100% calc(100% - 2 * var(--pixel)) no-repeat;
-        mask-composite: intersect, intersect, add;
-    }
+  .screen {
+    width: round(down, 100cqi, var(--pixel));
+    height: round(down, 52.5cqi, var(--pixel));
+    mask:
+      linear-gradient(to right, var(--dot)) 0 0 / var(--pixel) var(--pixel),
+      linear-gradient(to bottom, var(--dot)) 0 0 / var(--pixel) var(--pixel),
+      linear-gradient(#000 0 0) center / calc(100% - 2 * var(--pixel)) 100% no-repeat,
+      linear-gradient(#000 0 0) center / 100% calc(100% - 2 * var(--pixel)) no-repeat;
+    mask-composite: intersect, intersect, add;
+  }
 
-    img {
-        display: block;
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
-    }
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 </style>
 
 <script>
-    const DURATION = 700;
+  const DURATION = 700;
 
-    for (const on of document.querySelectorAll<SVGRectElement>("a > .frame .on")) {
-        const card = on.closest("a")!;
-        const fronts: { t: number; lit: boolean }[] = [];
-        let base = false;
-        let half = 0;
-        let pixel = 0;
+  for (const on of document.querySelectorAll<SVGRectElement>("a > .frame .on")) {
+    const card = on.closest("a")!;
+    const fronts: { t: number; lit: boolean }[] = [];
+    let base = false;
+    let half = 0;
+    let pixel = 0;
 
-        const render = (now: number) => {
-            while (fronts.length && now - fronts[0].t >= DURATION) base = fronts.shift()!.lit;
-            const segments: [number, boolean][] = [];
-            let from = 0;
-            for (const { t, lit } of fronts.toReversed()) {
-                const to = Math.min(half, Math.max(0, (Math.floor(((now - t) / DURATION) * (half / pixel)) + 0.5) * pixel));
-                segments.push([to - from, lit]);
-                from = to;
-            }
-            segments.push([half - from, base]);
-            const dashes = [0];
-            for (const [length, lit] of [...segments, ...segments.toReversed()]) {
-                if ((dashes.length % 2 === 1) !== lit) dashes.push(0);
-                dashes[dashes.length - 1] += length;
-            }
-            on.style.strokeDasharray = dashes.join(" ");
-            if (fronts.length) requestAnimationFrame(render);
-        };
+    const render = (now: number) => {
+      while (fronts.length && now - fronts[0].t >= DURATION) base = fronts.shift()!.lit;
+      const segments: [number, boolean][] = [];
+      let from = 0;
+      for (const { t, lit } of fronts.toReversed()) {
+        const to = Math.min(
+          half,
+          Math.max(0, (Math.floor(((now - t) / DURATION) * (half / pixel)) + 0.5) * pixel),
+        );
+        segments.push([to - from, lit]);
+        from = to;
+      }
+      segments.push([half - from, base]);
+      const dashes = [0];
+      for (const [length, lit] of [...segments, ...segments.toReversed()]) {
+        if ((dashes.length % 2 === 1) !== lit) dashes.push(0);
+        dashes[dashes.length - 1] += length;
+      }
+      on.style.strokeDasharray = dashes.join(" ");
+      if (fronts.length) requestAnimationFrame(render);
+    };
 
-        for (const [type, lit] of [["pointerenter", true], ["pointerleave", false]] as const) {
-            card.addEventListener(type, (e) => {
-                if (e.pointerType !== "mouse") return;
-                half = on.getTotalLength() / 2;
-                pixel = parseFloat(getComputedStyle(on).strokeWidth);
-                if (fronts.push({ t: performance.now(), lit }) === 1) requestAnimationFrame(render);
-            });
-        }
+    for (const [type, lit] of [
+      ["pointerenter", true],
+      ["pointerleave", false],
+    ] as const) {
+      card.addEventListener(type, (e) => {
+        if (e.pointerType !== "mouse") return;
+        half = on.getTotalLength() / 2;
+        pixel = parseFloat(getComputedStyle(on).strokeWidth);
+        if (fronts.push({ t: performance.now(), lit }) === 1) requestAnimationFrame(render);
+      });
     }
+  }
 </script>

@@ -6,55 +6,57 @@ const resumeUrl = new URL("/resume.md", Astro.site);
 ---
 
 <Base>
-    <DotMatrix as="h1">guillaume jones</DotMatrix>
-    <p>Dev working on various web & app projects since 2021.</p>
-    <DotMatrix as="h2">career</DotMatrix>
-    <dl>
-        <dt>2025+</dt>
-        <dd>
-            <a href="https://www.alayacare.com">AlayaCare</a> - senior
-            full-stack dev, healthcare SaaS
-        </dd>
-        <dt>2021-25</dt>
-        <dd>
-            <a href="https://www.oramedical.ca">Ora Medical</a> - full-stack dev & CTO, medtech startup
-        </dd>
-        <dt>contract</dt>
-        <dd>RougeCare's <a href="https://apps.apple.com/us/app/rouge-care/id6763177660">mobile app</a><br />Generative models for <a href="https://instadoodle.com/">InstaDoodle</a></dd>
-    </dl>
-    <DotMatrix as="h2">other</DotMatrix>
-    <dl>
-        <dt>2018-22</dt>
-        <dd>Biomedical engineering w/AI specialization, Polytechnique Montréal</dd>
-        <dt>various</dt>
-        <dd>
-            <a href="/projects">Personal projects</a>
-        </dd>
-    </dl>
-    <p class="agents">
-        For agents: the full resume is available as Markdown at{" "}
-        <a href={resumeUrl}>{resumeUrl}</a>
-    </p>
+  <DotMatrix as="h1">guillaume jones</DotMatrix>
+  <p>Dev working on various web & app projects since 2021.</p>
+  <DotMatrix as="h2">career</DotMatrix>
+  <dl>
+    <dt>2025+</dt>
+    <dd>
+      <a href="https://www.alayacare.com">AlayaCare</a> - senior full-stack dev, healthcare SaaS
+    </dd>
+    <dt>2021-25</dt>
+    <dd>
+      <a href="https://www.oramedical.ca">Ora Medical</a> - full-stack dev & CTO, medtech startup
+    </dd>
+    <dt>contract</dt>
+    <dd>
+      RougeCare's <a href="https://apps.apple.com/us/app/rouge-care/id6763177660">mobile app</a>
+      <br />
+      Generative models for <a href="https://instadoodle.com/">InstaDoodle</a>
+    </dd>
+  </dl>
+  <DotMatrix as="h2">other</DotMatrix>
+  <dl>
+    <dt>2018-22</dt>
+    <dd>Biomedical engineering w/AI specialization, Polytechnique Montréal</dd>
+    <dt>various</dt>
+    <dd>
+      <a href="/projects">Personal projects</a>
+    </dd>
+  </dl>
+  <p class="agents">
+    For agents: the full resume is available as Markdown at <a href={resumeUrl}>{resumeUrl}</a>
+  </p>
 </Base>
 
 <style>
-    dl {
-        grid-template-columns: 7ch 1fr;
-        margin-left: 0.25rem;
-    }
+  dl {
+    grid-template-columns: 7ch 1fr;
+    margin-left: 0.25rem;
+  }
 
-    .agents {
-        margin-top: 4rem;
-        color: var(--bg);
-    }
+  .agents {
+    margin-top: 4rem;
+    color: var(--bg);
+  }
 
-    .agents,
-    .agents a {
-        cursor: default;
-    }
+  .agents,
+  .agents a {
+    cursor: default;
+  }
 
-    .agents a:hover {
-        background: none;
-        color: inherit;
-    }
+  .agents a:hover {
+    background: none;
+    color: inherit;
+  }
 </style>

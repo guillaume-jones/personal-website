@@ -17,7 +17,6 @@ npm run dev
 Site is currently deployed to Cloudflare Workers as static assets (see `wrangler.jsonc`).
 Sub-sites (ex. [Hexfleet](https://github.com/guillaume-jones/hexfleet)) are deployed from their own repositories.
 
-
 For a manual deployment:
 
 ```sh

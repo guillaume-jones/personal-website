@@ -3,87 +3,88 @@ import DotMatrix from "./DotMatrix.astro";
 
 const path = Astro.url.pathname;
 const items = [
-    {
-        href: "/",
-        label: "home",
-        grid: ["...#...", "..###..", ".#####.", "#######", ".#...#.", ".#.#.#.", ".#.#.#."],
-    },
-    {
-        href: "/blog",
-        label: "blog",
-        grid: [".......", ".#####.", ".......", ".#####.", ".......", ".###...", "......."],
-    },
-    {
-        href: "/projects",
-        label: "projects",
-        grid: [".......", ".##.##.", ".##.##.", ".......", ".##.##.", ".##.##.", "......."],
-    },
+  {
+    href: "/",
+    label: "home",
+    grid: ["...#...", "..###..", ".#####.", "#######", ".#...#.", ".#.#.#.", ".#.#.#."],
+  },
+  {
+    href: "/blog",
+    label: "blog",
+    grid: [".......", ".#####.", ".......", ".#####.", ".......", ".###...", "......."],
+  },
+  {
+    href: "/projects",
+    label: "projects",
+    grid: [".......", ".##.##.", ".##.##.", ".......", ".##.##.", ".##.##.", "......."],
+  },
 ];
 ---
 
 <nav>
-    {
-        items.map(({ href, label, grid }) => (
-            <a href={href} aria-current={(href === "/" ? path === "/" : path.startsWith(href)) ? "page" : undefined}>
-                <DotMatrix as="div" grid={grid} />
-                <span>{label}</span>
-            </a>
-        ))
-    }
+  {items.map(({ href, label, grid }) => (
+    <a
+      href={href}
+      aria-current={(href === "/" ? path === "/" : path.startsWith(href)) ? "page" : undefined}
+    >
+      <DotMatrix as="div" grid={grid} />
+      <span>{label}</span>
+    </a>
+  ))}
 </nav>
 
 <style>
+  nav {
+    position: fixed;
+    inset: auto 0 0 0;
+    display: flex;
+    justify-content: space-around;
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--bg-light);
+    background: var(--bg);
+  }
+
+  a {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.4rem;
+    width: 4.5rem;
+    aspect-ratio: 1;
+    color: var(--fg);
+    font-size: 2.5rem;
+    text-decoration: none;
+  }
+
+  a:hover :global(.dot-matrix),
+  a[aria-current] :global(.dot-matrix) {
+    --fg: var(--navy);
+    --bg-light: var(--cream);
+  }
+
+  span {
+    padding: 0 0.25rem;
+    font-size: 0.7rem;
+  }
+
+  a:hover span,
+  a[aria-current] span {
+    background: var(--fg);
+    color: var(--bg);
+  }
+
+  @media (min-width: 40rem) {
     nav {
-        position: fixed;
-        inset: auto 0 0 0;
-        display: flex;
-        justify-content: space-around;
-        padding: 0.5rem 0;
-        border-top: 1px solid var(--bg-light);
-        background: var(--bg);
+      inset: 0 auto 0 0;
+      width: 5rem;
+      flex-direction: column;
+      justify-content: flex-start;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 0;
+      border-top: none;
+      border-right: 1px solid var(--bg-light);
     }
-
-    a {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        gap: 0.4rem;
-        width: 4.5rem;
-        aspect-ratio: 1;
-        color: var(--fg);
-        font-size: 2.5rem;
-        text-decoration: none;
-    }
-
-    a:hover :global(.dot-matrix),
-    a[aria-current] :global(.dot-matrix) {
-        --fg: var(--navy);
-        --bg-light: var(--cream);
-    }
-
-    span {
-        padding: 0 0.25rem;
-        font-size: 0.7rem;
-    }
-
-    a:hover span,
-    a[aria-current] span {
-        background: var(--fg);
-        color: var(--bg);
-    }
-
-    @media (min-width: 40rem) {
-        nav {
-            inset: 0 auto 0 0;
-            width: 5rem;
-            flex-direction: column;
-            justify-content: flex-start;
-            align-items: center;
-            gap: 0.5rem;
-            padding: 1rem 0;
-            border-top: none;
-            border-right: 1px solid var(--bg-light);
-        }
-    }
+  }
 </style>
