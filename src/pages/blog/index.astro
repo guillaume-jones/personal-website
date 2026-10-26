@@ -1,0 +1,17 @@
+---
+import { getCollection } from "astro:content";
+import ArticleCard from "../../components/ArticleCard.astro";
+import DotMatrix from "../../components/DotMatrix.astro";
+import Base from "../../layouts/Base.astro";
+
+const articles = (await getCollection("blog")).sort(
+  (a, b) => b.data.date.valueOf() - a.data.date.valueOf(),
+);
+---
+
+<Base title="blog">
+  <DotMatrix as="h1">blog</DotMatrix>
+  {articles.map((article) => (
+    <ArticleCard article={article} />
+  ))}
+</Base>

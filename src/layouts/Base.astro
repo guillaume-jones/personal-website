@@ -15,7 +15,7 @@ const { title } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title ? title + " | guillaume-jones" : "guillaume-jones"}</title>
-    <Font cssVariable="--font-b612-mono" preload />
+    <Font cssVariable="--font-b612-mono" preload={[{ style: "normal" }]} />
     <script is:inline>
       if (localStorage.getItem("theme") === "light")
         document.documentElement.dataset.theme = "light";
@@ -89,6 +89,23 @@ const { title } = Astro.props;
         font-size: 1rem;
       }
 
+      hgroup > :first-child {
+        margin-bottom: 0.25rem;
+      }
+
+      hgroup > p {
+        font-style: italic;
+      }
+
+      time {
+        opacity: 0.7;
+      }
+
+      img {
+        max-width: 100%;
+        height: auto;
+      }
+
       dl {
         display: grid;
         grid-template-columns: max-content 1fr;
@@ -107,7 +124,7 @@ const { title } = Astro.props;
         text-underline-offset: 0.2em;
       }
 
-      :is(p, dd) a:hover {
+      :is(p, dd, hgroup) a:hover {
         background: var(--fg);
         color: var(--bg);
         text-decoration: none;

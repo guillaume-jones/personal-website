@@ -1,0 +1,92 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import DotMatrix from "../../components/DotMatrix.astro";
+import Base from "../../layouts/Base.astro";
+
+export async function getStaticPaths() {
+  const articles = (await getCollection("blog")).sort(
+    (a, b) => a.data.date.valueOf() - b.data.date.valueOf(),
+  );
+  return articles.map((article, i) => ({
+    params: { slug: article.id },
+    props: { article, previous: articles[i - 1], next: articles[i + 1] },
+  }));
+}
+
+interface Props {
+  article: CollectionEntry<"blog">;
+  previous?: CollectionEntry<"blog">;
+  next?: CollectionEntry<"blog">;
+}
+
+const { article, previous, next } = Astro.props;
+const { title, subtitle, date } = article.data;
+const { Content } = await render(article);
+---
+
+<Base title={title}>
+  <article>
+    <header>
+      <hgroup>
+        <DotMatrix as="h1">{title}</DotMatrix>
+        <p>{subtitle}</p>
+      </hgroup>
+      <p>
+        <time datetime={date.toISOString()}>{date.toISOString().slice(0, 10)}</time>
+      </p>
+    </header>
+    <Content />
+    <footer>
+      {previous && (
+        <p>
+          ← previous:{" "}
+          <a href={`/blog/${previous.id}`} rel="prev">
+            {previous.data.title}
+          </a>
+        </p>
+      )}
+      {next && (
+        <p class="next">
+          next:{" "}
+          <a href={`/blog/${next.id}`} rel="next">
+            {next.data.title}
+          </a>{" "}
+          →
+        </p>
+      )}
+    </footer>
+  </article>
+</Base>
+
+<style>
+  article {
+    max-width: 45rem;
+  }
+
+  header {
+    margin-bottom: 1.5rem;
+  }
+
+  h1 {
+    margin-top: 0;
+  }
+
+  article > :global(p) {
+    margin-bottom: 1rem;
+  }
+
+  footer {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .next {
+    margin-left: auto;
+    text-align: right;
+  }
+</style>
+
+<script>
+  localStorage.setItem("blog:lastVisit", new Date().toISOString());
+</script>

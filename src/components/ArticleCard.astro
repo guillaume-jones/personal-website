@@ -1,0 +1,94 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+
+interface Props {
+  article: CollectionEntry<"blog">;
+}
+
+const { article } = Astro.props;
+const { title, subtitle, date, cover, excerpt } = article.data;
+const href = `/blog/${article.id}`;
+---
+
+<article>
+  <a href={href} class="cover" tabindex="-1" aria-hidden="true">
+    <Image src={cover} alt="" widths={[240, 480]} sizes="(min-width: 40rem) 15rem, 100vw" />
+  </a>
+  <div>
+    <header>
+      <hgroup>
+        <h3>
+          <a href={href}>{title}</a>
+        </h3>
+        <p>{subtitle}</p>
+      </hgroup>
+      <p>
+        <time datetime={date.toISOString()}>{date.toISOString().slice(0, 10)}</time>
+        <span class="new" hidden>
+          new
+        </span>
+      </p>
+    </header>
+    <p>
+      {excerpt} <a href={href}>read more</a>
+    </p>
+  </div>
+</article>
+
+<style>
+  article {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--bg-light);
+  }
+
+  @media (min-width: 40rem) {
+    article {
+      grid-template-columns: 15rem 1fr;
+    }
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 2;
+    object-fit: cover;
+  }
+
+  h3 {
+    margin-top: 0;
+  }
+
+  a:visited:not(:hover) {
+    color: color-mix(in srgb, var(--fg) 70%, var(--bg));
+  }
+
+  header {
+    margin-bottom: 0.5rem;
+  }
+
+  p {
+    margin-left: 0;
+  }
+
+  .new {
+    margin-left: 1rem;
+    padding: 0 0.25rem;
+    background: var(--fg);
+    color: var(--bg);
+  }
+</style>
+
+<script>
+  import { $ } from "../lib/dom";
+
+  const lastVisit = localStorage.getItem("blog:lastVisit");
+  if (lastVisit) {
+    for (const article of document.querySelectorAll("article:has(.new)")) {
+      if ($<HTMLTimeElement>("time", article).dateTime > lastVisit)
+        $<HTMLElement>(".new", article).hidden = false;
+    }
+  }
+</script>

@@ -13,6 +13,7 @@ export default defineConfig({
       name: "B612 Mono",
       cssVariable: "--font-b612-mono",
       weights: [400, 700],
+      styles: ["normal", "italic"],
       fallbacks: ["monospace"],
     },
   ],

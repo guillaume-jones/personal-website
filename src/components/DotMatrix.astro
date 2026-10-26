@@ -25,7 +25,7 @@ const pattern = `dot-matrix-${crypto.randomUUID()}`;
 ---
 
 <Tag {...rest}>
-  <span set:html={html} />
+  <span class="text" set:html={html} />
   <svg
     class="dot-matrix"
     viewBox={`0 0 ${cols} ${rows}`}
@@ -46,7 +46,7 @@ const pattern = `dot-matrix-${crypto.randomUUID()}`;
 </Tag>
 
 <style>
-  span {
+  .text {
     position: absolute;
     width: 1px;
     height: 1px;
