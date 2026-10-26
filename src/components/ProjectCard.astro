@@ -37,6 +37,7 @@ const { href, image, title, description } = Astro.props;
     color: var(--fg);
     text-decoration: none;
     --dot: transparent calc(var(--pixel) * 0.1), #000 0 calc(var(--pixel) * 0.9), transparent 0;
+    --grid: color-mix(in srgb, var(--bg) 50%, transparent);
   }
 
   .frame {
@@ -75,14 +76,18 @@ const { href, image, title, description } = Astro.props;
   }
 
   .screen {
+    position: relative;
     width: round(down, 100cqi, var(--pixel));
     height: round(down, 52.5cqi, var(--pixel));
-    mask:
-      linear-gradient(to right, var(--dot)) 0 0 / var(--pixel) var(--pixel),
-      linear-gradient(to bottom, var(--dot)) 0 0 / var(--pixel) var(--pixel),
-      linear-gradient(#000 0 0) center / calc(100% - 2 * var(--pixel)) 100% no-repeat,
-      linear-gradient(#000 0 0) center / 100% calc(100% - 2 * var(--pixel)) no-repeat;
-    mask-composite: intersect, intersect, add;
+  }
+
+  .screen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to right, var(--grid) 1px, transparent 1px) 0 0 / var(--pixel) var(--pixel),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px) 0 0 / var(--pixel) var(--pixel);
   }
 
   img {
