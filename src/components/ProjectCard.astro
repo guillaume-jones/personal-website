@@ -81,9 +81,11 @@ const { href, image, title, description } = Astro.props;
         stroke-dasharray: 8 92;
     }
 
-    a:hover .snake {
-        visibility: visible;
-        animation: zip 3s linear infinite;
+    @media (hover: hover) {
+        a:hover .snake {
+            visibility: visible;
+            animation: zip 3s linear infinite;
+        }
     }
 
     @keyframes zip {

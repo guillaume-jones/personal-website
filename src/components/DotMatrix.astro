@@ -38,7 +38,6 @@ const pattern = `dot-matrix-${crypto.randomUUID()}`;
 
     svg {
         display: block;
-        cursor: none;
     }
 
     .off {
@@ -53,8 +52,14 @@ const pattern = `dot-matrix-${crypto.randomUUID()}`;
         visibility: hidden;
     }
 
-    svg:hover .cursor {
-        visibility: visible;
+    @media (pointer: fine) {
+        svg {
+            cursor: none;
+        }
+
+        svg:hover .cursor {
+            visibility: visible;
+        }
     }
 </style>
 
