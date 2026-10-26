@@ -41,11 +41,14 @@ const { href, image, title, description } = Astro.props;
 
   .frame {
     position: absolute;
-    inset: 0;
+    top: 0;
+    left: 0;
+    width: round(down, 100%, var(--pixel));
+    height: round(down, 100%, var(--pixel));
     pointer-events: none;
     mask:
-      linear-gradient(to right, var(--dot)) 0 0 / var(--pixel) var(--pixel) round,
-      linear-gradient(to bottom, var(--dot)) 0 0 / var(--pixel) var(--pixel) round;
+      linear-gradient(to right, var(--dot)) 0 0 / var(--pixel) var(--pixel),
+      linear-gradient(to bottom, var(--dot)) 0 0 / var(--pixel) var(--pixel);
     mask-composite: intersect;
   }
 

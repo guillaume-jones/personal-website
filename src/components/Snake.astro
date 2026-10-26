@@ -1,0 +1,182 @@
+---
+import DotMatrix from "./DotMatrix.astro";
+import { dotGrid, dotMatrix } from "../lib/dotMatrix";
+
+const { cols, rows, frame } = dotGrid(Array(18).fill(".".repeat(27)));
+const [cx, cy] = [Math.floor(cols / 2), rows - 3];
+const arrows = {
+  left: ["..#..", ".#...", "#####", ".#...", "..#.."],
+  up: ["..#..", ".###.", "#.#.#", "..#..", "..#.."],
+  down: ["..#..", "..#..", "#.#.#", ".###.", "..#.."],
+  right: ["..#..", "...#.", "#####", "...#.", "..#.."],
+};
+---
+
+<div class="snake">
+  <svg viewBox={`0 0 ${cols} ${rows}`} role="img" aria-label="snake game, click to play">
+    <pattern id="snake-dots" width="1" height="1" patternUnits="userSpaceOnUse">
+      <rect class="off" width=".8" height=".8" />
+    </pattern>
+    <path d={frame} fill="url(#snake-dots)" />
+    <path class="on board" />
+    <g class="on game-over">
+      <path d={dotMatrix("game").lit} transform="translate(1 0)" />
+      <path d={dotMatrix("over").lit} transform="translate(1 8)" />
+    </g>
+    <rect class="on blink" x={cx} y={cy} width=".8" height=".8" />
+  </svg>
+  <div class="controls">
+    {Object.entries(arrows).map(([dir, grid]) => (
+      <button data-dir={dir} aria-label={dir}>
+        <DotMatrix as="div" grid={grid} />
+      </button>
+    ))}
+  </div>
+</div>
+
+<style>
+  .snake {
+    max-width: 24rem;
+  }
+
+  svg {
+    display: block;
+    width: 100%;
+    cursor: pointer;
+  }
+
+  .off {
+    fill: var(--bg-light);
+  }
+
+  .on {
+    fill: var(--fg);
+  }
+
+  .blink {
+    animation: blink 1s steps(1) infinite;
+  }
+
+  @keyframes blink {
+    50% {
+      fill: var(--bg-light);
+    }
+  }
+
+  .game-over,
+  [data-state="over"] .board,
+  [data-state="playing"] .blink {
+    display: none;
+  }
+
+  [data-state="over"] .game-over {
+    display: inline;
+  }
+
+  .controls {
+    display: none;
+    justify-content: space-between;
+    margin-top: 1rem;
+  }
+
+  button {
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 4rem;
+    touch-action: manipulation;
+  }
+
+  button:active :global(.dot-matrix) {
+    --fg: var(--navy);
+    --bg-light: var(--cream);
+  }
+
+  @media (pointer: coarse) {
+    [data-state] .controls {
+      display: flex;
+    }
+  }
+</style>
+
+<script>
+  type Cell = [number, number];
+
+  const root = document.querySelector<HTMLElement>(".snake")!;
+  const svg = root.querySelector("svg")!;
+  const board = svg.querySelector(".board")!;
+  const blink = svg.querySelector<SVGRectElement>(".blink")!;
+  const { width: cols, height: rows } = svg.viewBox.baseVal;
+  const dirs: Record<string, Cell> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
+
+  let snake: Cell[] = [];
+  let food: Cell;
+  let dir: Cell;
+  let queue: Cell[] = [];
+  let timer = 0;
+
+  const same = (a: Cell, b: Cell) => a[0] === b[0] && a[1] === b[1];
+
+  const hits = (cells: Cell[], cell: Cell) => cells.some((c) => same(c, cell));
+
+  const isCorner = ([x, y]: Cell) => x % (cols - 1) === 0 && y % (rows - 1) === 0;
+
+  const step = ([x, y]: Cell): Cell => [(x + dir[0] + cols) % cols, (y + dir[1] + rows) % rows];
+
+  const place = () => {
+    let cell: Cell;
+    do {
+      cell = [Math.floor(Math.random() * cols), Math.floor(Math.random() * rows)];
+    } while (hits(snake, cell) || isCorner(cell));
+    return cell;
+  };
+
+  const draw = () =>
+    board.setAttribute("d", [...snake, food].map(([x, y]) => `M${x} ${y}h.8v.8h-.8z`).join(""));
+
+  const tick = () => {
+    dir = queue.shift() ?? dir;
+    let head = step(snake[0]);
+    while (isCorner(head)) head = step(head);
+    const eats = same(food, head);
+    const body = eats ? snake : snake.slice(0, -1);
+    if (hits(body, head)) {
+      clearInterval(timer);
+      timer = 0;
+      root.dataset.state = "over";
+      return;
+    }
+    snake = [head, ...body];
+    if (eats) food = place();
+    draw();
+  };
+
+  const steer = (name: string) => {
+    const next = dirs[name];
+    const last = queue.at(-1) ?? dir;
+    if (timer && queue.length < 2 && next[0] !== last[0] && next[1] !== last[1]) queue.push(next);
+  };
+
+  svg.addEventListener("click", () => {
+    if (timer) return;
+    const [x, y] = [blink.x.baseVal.value, blink.y.baseVal.value];
+    snake = [0, 1, 2].map((i): Cell => [x - i, y]);
+    dir = dirs.right;
+    queue = [];
+    food = place();
+    draw();
+    root.dataset.state = "playing";
+    timer = window.setInterval(tick, 109);
+  });
+
+  document.addEventListener("keydown", (e) => {
+    const name = e.key.replace("Arrow", "").toLowerCase();
+    if (!timer || !(name in dirs)) return;
+    e.preventDefault();
+    steer(name);
+  });
+
+  for (const button of root.querySelectorAll<HTMLButtonElement>("[data-dir]")) {
+    button.addEventListener("pointerdown", () => steer(button.dataset.dir!));
+  }
+</script>
