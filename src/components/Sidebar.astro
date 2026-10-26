@@ -1,5 +1,6 @@
 ---
 import DotMatrix from "./DotMatrix.astro";
+import ThemeToggle from "./ThemeToggle.astro";
 
 const path = Astro.url.pathname;
 const items = [
@@ -31,6 +32,7 @@ const items = [
       <span>{label}</span>
     </a>
   ))}
+  <ThemeToggle />
 </nav>
 
 <style>
@@ -57,10 +59,14 @@ const items = [
     text-decoration: none;
   }
 
+  a:hover,
+  a[aria-current] {
+    --bg-light: var(--fg);
+  }
+
   a:hover :global(.dot-matrix),
   a[aria-current] :global(.dot-matrix) {
-    --fg: var(--navy);
-    --bg-light: var(--cream);
+    --fg: var(--bg);
   }
 
   span {
@@ -85,6 +91,10 @@ const items = [
       padding: 1rem 0;
       border-top: none;
       border-right: 1px solid var(--bg-light);
+    }
+
+    nav > :global(.theme-toggle) {
+      margin-top: auto;
     }
   }
 </style>

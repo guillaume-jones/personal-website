@@ -16,6 +16,10 @@ const { title } = Astro.props;
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>{title ? title + " | guillaume-jones" : "guillaume-jones"}</title>
     <Font cssVariable="--font-b612-mono" preload />
+    <script is:inline>
+      if (localStorage.getItem("theme") === "light")
+        document.documentElement.dataset.theme = "light";
+    </script>
     <style is:global>
       body {
         --navy: #0a1630;
@@ -30,6 +34,12 @@ const { title } = Astro.props;
         background: var(--bg);
         color: var(--fg);
         font-family: var(--font-b612-mono);
+      }
+
+      [data-theme="light"] body {
+        --bg: #fffbf6;
+        --fg: #0f2b6b;
+        --bg-light: #f2eae0;
       }
 
       @media (min-width: 40rem) {

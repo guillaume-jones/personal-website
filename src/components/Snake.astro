@@ -87,9 +87,12 @@ const arrows = {
     touch-action: manipulation;
   }
 
+  button:active {
+    --bg-light: var(--fg);
+  }
+
   button:active :global(.dot-matrix) {
-    --fg: var(--navy);
-    --bg-light: var(--cream);
+    --fg: var(--bg);
   }
 
   @media (pointer: coarse) {

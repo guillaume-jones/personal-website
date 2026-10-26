@@ -1,0 +1,46 @@
+---
+import DotMatrix from "./DotMatrix.astro";
+---
+
+<button type="button" class="theme-toggle" aria-label="dark mode" aria-pressed="true">
+  <DotMatrix as="div" class="moon" grid={[".###.", "##...", "#....", "##...", ".###."]} />
+  <DotMatrix as="div" class="sun" grid={["#.#.#", ".###.", "#####", ".###.", "#.#.#"]} />
+</button>
+
+<style>
+  button {
+    align-self: center;
+    padding: 0;
+    border: 0;
+    background: none;
+    font-size: 2.5rem;
+    cursor: pointer;
+  }
+
+  :global([data-theme="light"]) button :global(.moon),
+  :global(:root:not([data-theme="light"])) button :global(.sun) {
+    display: none;
+  }
+
+  button:hover {
+    --bg-light: var(--fg);
+  }
+
+  button:hover :global(.dot-matrix) {
+    --fg: var(--bg);
+  }
+</style>
+
+<script>
+  import { $ } from "../lib/dom";
+
+  const toggle = $<HTMLButtonElement>(".theme-toggle");
+  const root = document.documentElement;
+  toggle.ariaPressed = String(root.dataset.theme !== "light");
+  toggle.addEventListener("click", () => {
+    const theme = root.dataset.theme === "light" ? "dark" : "light";
+    root.dataset.theme = theme;
+    localStorage.setItem("theme", theme);
+    toggle.ariaPressed = String(theme === "dark");
+  });
+</script>
