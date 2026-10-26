@@ -2,7 +2,7 @@
 import { Font } from "astro:assets";
 import Sidebar from "../components/Sidebar.astro";
 
-const { title = "jones' site" } = Astro.props;
+const { title } = Astro.props;
 ---
 
 <html lang="en">
@@ -10,7 +10,7 @@ const { title = "jones' site" } = Astro.props;
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <title>{title}</title>
+        <title>{title ? title + " | guillaume-jones" : "guillaume-jones"}</title>
         <Font cssVariable="--font-b612-mono" preload />
         <style is:global>
             body {
@@ -50,11 +50,13 @@ const { title = "jones' site" } = Astro.props;
             h2,
             h3,
             h4 {
-                margin: 0.5rem 0 0.5rem;
+                margin: 1.25rem 0 0.875rem;
             }
 
             p {
                 margin: 0 0 0 0.25rem;
+                font-size: 0.9rem;
+                line-height: 1.4;
             }
 
             h1 {
@@ -62,7 +64,7 @@ const { title = "jones' site" } = Astro.props;
             }
 
             h2 {
-                font-size: 1.75rem;
+                font-size: 1.875rem;
             }
 
             h3 {
@@ -71,6 +73,30 @@ const { title = "jones' site" } = Astro.props;
 
             h4 {
                 font-size: 1rem;
+            }
+
+            dl {
+                display: grid;
+                grid-template-columns: max-content 1fr;
+                align-items: baseline;
+                line-height: 1.4;
+                gap: 0.75rem 0.5rem;
+                font-size: 0.9rem;
+            }
+
+            dt {
+                opacity: 0.7;
+            }
+
+            a {
+                color: inherit;
+                text-underline-offset: 0.2em;
+            }
+
+            :is(p, dd) a:hover {
+                background: var(--fg);
+                color: var(--bg);
+                text-decoration: none;
             }
         </style>
     </head>
