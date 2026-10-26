@@ -6,6 +6,7 @@ import react from "@astrojs/react";
 export default defineConfig({
   site: "https://guillaumejones.com",
   integrations: [mdx(), react()],
+  prefetch: { prefetchAll: true },
   fonts: [
     {
       provider: fontProviders.google(),

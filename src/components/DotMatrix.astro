@@ -1,5 +1,11 @@
 ---
+import type { HTMLAttributes, HTMLTag } from "astro/types";
 import { cursor, dotGrid, dotMatrix } from "../lib/dotMatrix";
+
+interface Props extends HTMLAttributes<"div"> {
+  as?: HTMLTag;
+  grid?: string[];
+}
 
 const { as: Tag = "h1", grid, ...rest } = Astro.props;
 const html = (await Astro.slots.render("default")) ?? "";
@@ -77,17 +83,17 @@ const pattern = `dot-matrix-${crypto.randomUUID()}`;
 </style>
 
 <script>
-  type Cell = [number, number];
+  import { $ } from "../lib/dom";
+  import type { Cell } from "../lib/dotMatrix";
 
   for (const svg of document.querySelectorAll<SVGSVGElement>(".dot-matrix")) {
-    const frame = svg.querySelector<SVGPathElement>(".frame")!;
-    const cursor = svg.querySelector<SVGGElement>(".cursor")!;
+    const frame = $<SVGPathElement>(".frame", svg);
+    const cursor = $<SVGGElement>(".cursor", svg);
     const dots = [...cursor.querySelectorAll("rect")];
     const lit = new Set(
-      svg
-        .querySelector(".lit")!
-        .getAttribute("d")!
-        .match(/\d+ \d+/g),
+      $(".lit", svg)
+        .getAttribute("d")
+        ?.match(/\d+ \d+/g),
     );
     const touched = new Set<string>();
     const cols = svg.viewBox.baseVal.width;

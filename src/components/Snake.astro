@@ -100,12 +100,13 @@ const arrows = {
 </style>
 
 <script>
-  type Cell = [number, number];
+  import { $ } from "../lib/dom";
+  import type { Cell } from "../lib/dotMatrix";
 
-  const root = document.querySelector<HTMLElement>(".snake")!;
-  const svg = root.querySelector("svg")!;
-  const board = svg.querySelector(".board")!;
-  const blink = svg.querySelector<SVGRectElement>(".blink")!;
+  const root = $<HTMLElement>(".snake");
+  const svg = $<SVGSVGElement>("svg", root);
+  const board = $(".board", svg);
+  const blink = $<SVGRectElement>(".blink", svg);
   const { width: cols, height: rows } = svg.viewBox.baseVal;
   const dirs: Record<string, Cell> = { up: [0, -1], down: [0, 1], left: [-1, 0], right: [1, 0] };
 
@@ -176,7 +177,7 @@ const arrows = {
     steer(name);
   });
 
-  for (const button of root.querySelectorAll<HTMLButtonElement>("[data-dir]")) {
-    button.addEventListener("pointerdown", () => steer(button.dataset.dir!));
+  for (const name of Object.keys(dirs)) {
+    $(`[data-dir="${name}"]`, root).addEventListener("pointerdown", () => steer(name));
   }
 </script>

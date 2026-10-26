@@ -94,17 +94,20 @@ const { href, image, title, description } = Astro.props;
 </style>
 
 <script>
+  import { $ } from "../lib/dom";
+
   const DURATION = 700;
 
-  for (const on of document.querySelectorAll<SVGRectElement>("a > .frame .on")) {
-    const card = on.closest("a")!;
+  for (const card of document.querySelectorAll<HTMLAnchorElement>("a:has(> .frame)")) {
+    const on = $<SVGRectElement>(".frame .on", card);
     const fronts: { t: number; lit: boolean }[] = [];
     let base = false;
     let half = 0;
     let pixel = 0;
 
     const render = (now: number) => {
-      while (fronts.length && now - fronts[0].t >= DURATION) base = fronts.shift()!.lit;
+      const expired = fronts.splice(0, fronts.filter(({ t }) => now - t >= DURATION).length);
+      base = expired.at(-1)?.lit ?? base;
       const segments: [number, boolean][] = [];
       let from = 0;
       for (const { t, lit } of fronts.toReversed()) {

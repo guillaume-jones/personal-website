@@ -8,7 +8,7 @@ const pitch = font.unitsPerEm / 10;
 const PAD_X = 2;
 const PAD_Y = 1;
 
-type Cell = [number, number];
+export type Cell = [number, number];
 
 const frameOf = (cols: number, rows: number) =>
   `M1 0H${cols - 1}V1H${cols}V${rows - 1}H${cols - 1}V${rows}H1V${rows - 1}H0V1H1Z`;
@@ -62,7 +62,7 @@ export const dotGrid = (grid: string[]) => {
     rows,
     lit: dotPath(
       grid.flatMap((row, y) =>
-        [...row].flatMap((c, x) => (c === "#" ? [[x + 1, y + 1] as Cell] : [])),
+        [...row].flatMap((c, x): Cell[] => (c === "#" ? [[x + 1, y + 1]] : [])),
       ),
     ),
     frame: frameOf(cols, rows),
