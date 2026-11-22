@@ -1,6 +1,7 @@
 ---
 import diskAtlas from "../assets/projects/disk-atlas.png";
 import hexfleet from "../assets/projects/hexfleet.png";
+import switchboard from "../assets/projects/switchboard.png";
 import DotMatrix from "../components/DotMatrix.astro";
 import ProjectCard from "../components/ProjectCard.astro";
 import Base from "../layouts/Base.astro";
@@ -14,10 +15,16 @@ const projects = [
       "Hexagon-tile based game with simultaneous turns and unique rules. Singleplayer and online multiplayer with a leaderboard.",
   },
   {
+    href: "https://github.com/guillaume-jones/switchboard",
+    image: switchboard,
+    title: "Switchboard",
+    description: "Customizable app that turns any local data into live UI, with mobile access.",
+  },
+  {
     href: "https://github.com/guillaume-jones/disk-atlas",
     image: diskAtlas,
     title: "Disk Atlas",
-    description: "App to scan your disk and build an interactive realistic, world map.",
+    description: "App to scan your disk and build an interactive, realistic world map.",
   },
 ];
 ---
