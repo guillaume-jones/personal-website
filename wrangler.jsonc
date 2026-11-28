@@ -1,11 +1,14 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "personal-website",
+  "main": "./worker.js",
   "compatibility_date": "2026-09-27",
   "build": { "command": "npm run build" },
   "routes": [{ "pattern": "guillaumejones.com", "custom_domain": true }],
   "assets": {
     "directory": "./dist",
+    "binding": "ASSETS",
     "not_found_handling": "404-page",
   },
+  "observability": { "enabled": true },
 }
